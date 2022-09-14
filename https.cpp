@@ -11,6 +11,26 @@
 #define port 443 //监听端口，可以在范围内自由设定
 using namespace std;
 
+
+
+void close_ssl(SSL *ssl,int client_fd)
+{
+    if(ssl)
+    {
+        /* 关闭 SSL 连接 */
+        SSL_shutdown(ssl);
+        /* 释放 SSL */
+        SSL_free(ssl);
+
+    }
+
+    if(client_fd>0)
+    {
+        close(client_fd);
+    }
+}
+
+
 int main()
 {
     std::string message ="";
@@ -51,7 +71,7 @@ int main()
     }
 
     /* 载入用户私钥 */
-    if (SSL_CTX_use_PrivateKey_file(ctx, "/Users/liaokun/Downloads/learnrtc.top_nginx/learnrtc.top.pem", SSL_FILETYPE_PEM) <= 0) {
+    if (SSL_CTX_use_PrivateKey_file(ctx, "/Users/liaokun/Downloads/learnrtc.top_nginx/learnrtc.top.key", SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stdout);
         exit(1);
     }
@@ -100,8 +120,8 @@ int main()
         int client_fd = accept(local_fd, (struct sockaddr *)&client_addr, &len);
         if (client_fd == -1)
         {
-            cout << "accept错误\n"
-                 << endl;
+            cout << "accept错误\n"<< endl;
+
             exit(-1);
         }
 
@@ -113,7 +133,8 @@ int main()
         if (SSL_accept(ssl) == -1) {
             perror("accept");
             printf("SSL 连接失败!\n");
-            close(client_fd);
+            close_ssl(ssl,client_fd);
+            break;
         }
         //7.输出客户机的信息
         char *ip = inet_ntoa(client_addr.sin_addr);
@@ -129,16 +150,12 @@ int main()
         //9.使用第6步accept()返回socket描述符，即客户机的描述符，进行通信。
         SSL_write(ssl, message.c_str(), message.length());//返回message
 
-        //10.关闭sockfd
-        close(client_fd);
-
-        /* 关闭 SSL 连接 */
-        SSL_shutdown(ssl);
-        /* 释放 SSL */
-        SSL_free(ssl);
-        /* 释放 CTX */
-        SSL_CTX_free(ctx);
+        close_ssl(ssl,client_fd);
     }
+    /* 释放 CTX */
+    SSL_CTX_free(ctx);
+
+    close(local_fd);
     return 0;
 }
 
