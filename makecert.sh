@@ -14,4 +14,5 @@ openssl req -new -key cert/server.key -out cert/server.csr -subj "/C=CN/ST=Beiji
 
 
 #ca根据csr文件为服务端颁发证书
-openssl x509 -req -in cert/server.csr -CA cert/rootCA.pem -CAkey cert/rootCA.key -CAcreateserial -out cert/server.pem -days 365 -sha256 -extfile cert/v3.ext
+openssl x509 -req -in cert/server.csr -CA cert/rootCA.pem -CAkey cert/rootCA.key -CAcreateserial -out cert/server.pem -days 825 -sha256 -extfile cert/v3.ext
+#SSL证书最长期限825天
