@@ -62,16 +62,16 @@ int main()
     // SSL_VERIFY_PEER---要求对证书进行认证，没有证书也会放行
     // SSL_VERIFY_FAIL_IF_NO_PEER_CERT---要求客户端需要提供证书，但验证发现单独使用没有证书也会放行
     SSL_CTX_set_verify(ctx, SSL_VERIFY_NONE, NULL);
-
+//    SSL_CTX_set_security_level(ctx,0);
 
     /* 载入用户的数字证书， 此证书用来发送给客户端。 证书里包含有公钥 */
-    if ( SSL_CTX_use_certificate_chain_file(ctx, "/Users/liaokun/Downloads/learnrtc.top_nginx/learnrtc.top_bundle.pem") <= 0) {
+    if ( SSL_CTX_use_certificate_file(ctx, "/Users/liaokun/CLionProjects/http/cert/server.crt", SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stdout);
         exit(1);
     }
 
     /* 载入用户私钥 */
-    if (SSL_CTX_use_PrivateKey_file(ctx, "/Users/liaokun/Downloads/learnrtc.top_nginx/learnrtc.top.key", SSL_FILETYPE_PEM) <= 0) {
+    if (SSL_CTX_use_PrivateKey_file(ctx, "/Users/liaokun/CLionProjects/http/cert/server.key", SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stdout);
         exit(1);
     }
