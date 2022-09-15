@@ -65,7 +65,7 @@ int main()
 //    SSL_CTX_set_security_level(ctx,0);
 
     /* 载入用户的数字证书， 此证书用来发送给客户端。 证书里包含有公钥 */
-    if ( SSL_CTX_use_certificate_file(ctx, "/Users/liaokun/CLionProjects/http/cert/server.crt", SSL_FILETYPE_PEM) <= 0) {
+    if ( SSL_CTX_use_certificate_file(ctx, "/Users/liaokun/CLionProjects/http/cert/server.pem", SSL_FILETYPE_PEM) <= 0) {
         ERR_print_errors_fp(stdout);
         exit(1);
     }
